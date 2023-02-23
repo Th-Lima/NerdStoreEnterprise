@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NSE.Identity.API.Data;
 using NSE.Identity.API.Extensions;
+using NSE.Identity.API.Services;
+using NSE.Identity.API.Services.Interfaces;
 using System.Text;
 
 namespace NSE.Identity.API
@@ -32,6 +34,10 @@ namespace NSE.Identity.API
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            //DI
+            services.AddScoped<IJwtService, JwtService>();
+
 
             //JWT
             var appSettingsSection = Configuration.GetSection("AppSettings");
