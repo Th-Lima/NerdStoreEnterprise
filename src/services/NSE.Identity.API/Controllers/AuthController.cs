@@ -22,8 +22,6 @@ namespace NSE.Identity.API.Controllers
         [HttpPost("new-account")]
         public async Task<ActionResult> Register(UserIdentityRegister userRegister)
         {
-            return new StatusCodeResult(500);
-
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 
