@@ -26,7 +26,7 @@ namespace NSE.Identity.API.Services
             _appSettings = appSettings.Value;
         }
 
-        public async Task<UserResponseLogin> GenerateJwtAsync(string email)
+        public async Task<UserIdentityResponseLogin> GenerateJwtAsync(string email)
         {
             var user = await _userManager.FindByNameAsync(email);
             var claims = await GetClaimsAsync(user);
@@ -79,17 +79,17 @@ namespace NSE.Identity.API.Services
             return encodedToken;
         }
 
-        private UserResponseLogin BuildUserResponseLogin(string encodedToken, IdentityUser user, IList<Claim> claims)
+        private UserIdentityResponseLogin BuildUserResponseLogin(string encodedToken, IdentityUser user, IList<Claim> claims)
         {
-            var response = new UserResponseLogin()
+            var response = new UserIdentityResponseLogin()
             {
                 AccessToken = encodedToken,
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationHours).TotalSeconds,
-                UserToken = new UserToken
+                UserToken = new UserIdentityToken
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Claims = claims.Select(x => new UserClaim { Type = x.Type, Value = x.Value })
+                    Claims = claims.Select(x => new UserIdentityClaim { Type = x.Type, Value = x.Value })
                 }
             };
 

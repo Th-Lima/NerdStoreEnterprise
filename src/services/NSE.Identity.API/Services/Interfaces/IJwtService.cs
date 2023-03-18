@@ -5,6 +5,6 @@ namespace NSE.Identity.API.Services.Interfaces
 {
     public interface IJwtService
     {
-        Task<UserResponseLogin> GenerateJwtAsync(string email);
+        Task<UserIdentityResponseLogin> GenerateJwtAsync(string email);
     }
 }

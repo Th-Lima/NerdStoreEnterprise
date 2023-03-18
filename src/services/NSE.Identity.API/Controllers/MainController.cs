@@ -9,7 +9,7 @@ namespace NSE.Identity.API.Controllers
     [ApiController]
     public abstract class MainController : Controller
     {
-        protected ICollection<string> Erros = new List<string>();
+        protected ICollection<string> Errors = new List<string>();
 
         protected ActionResult CustomResponse(object result = null)
         {
@@ -18,7 +18,7 @@ namespace NSE.Identity.API.Controllers
 
             return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
             {
-                { "Mensagens", Erros.ToArray() }
+                { "Messages", Errors.ToArray() }
             }));
         }
 
@@ -35,17 +35,17 @@ namespace NSE.Identity.API.Controllers
 
         protected bool ValidOperation()
         {
-            return !Erros.Any();
+            return !Errors.Any();
         }
 
         protected void AddErrorsProcessing(string error)
         {
-            Erros.Add(error);
+            Errors.Add(error);
         }
 
         protected void ClearErrorsProcessing()
         {
-            Erros.Clear();
+            Errors.Clear();
         }
     }
 }

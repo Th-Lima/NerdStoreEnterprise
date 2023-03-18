@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NSE.Identity.API.Controllers
 {
-    [Route("api/identidade")]
+    [Route("api/identity")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -19,9 +19,11 @@ namespace NSE.Identity.API.Controllers
             _jwtService = jwtService;
         }
 
-        [HttpPost("nova-conta")]
-        public async Task<ActionResult> Register(UserRegister userRegister)
+        [HttpPost("new-account")]
+        public async Task<ActionResult> Register(UserIdentityRegister userRegister)
         {
+            return new StatusCodeResult(500);
+
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 
@@ -46,8 +48,8 @@ namespace NSE.Identity.API.Controllers
             return CustomResponse();
         }
 
-        [HttpPost("autenticar")]
-        public async Task<ActionResult> Login(UserLogin userLogin)
+        [HttpPost("login")]
+        public async Task<ActionResult> Login(UserIdentityLogin userLogin)
         {
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
