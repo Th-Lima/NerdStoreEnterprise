@@ -9,6 +9,56 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\fonts\fontawesome\css\all.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\all.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\brands.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\brands.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\fontawesome.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\fontawesome.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\regular.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\regular.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\solid.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\solid.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\svg-with-js.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\svg-with-js.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\v4-shims.css" />
+    <None Include="wwwroot\fonts\fontawesome\css\v4-shims.min.css" />
+    <None Include="wwwroot\fonts\fontawesome\scss\brands.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\fontawesome.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\regular.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\solid.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\v4-shims.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_animated.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_bordered-pulled.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_core.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_fixed-width.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_icons.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_larger.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_list.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_mixins.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_rotated-flipped.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_screen-reader.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_shims.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_stacked.scss" />
+    <None Include="wwwroot\fonts\fontawesome\scss\_variables.scss" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-brands-400.eot" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-brands-400.svg" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-brands-400.ttf" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-brands-400.woff" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-regular-400.eot" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-regular-400.svg" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-regular-400.ttf" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-regular-400.woff" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-solid-900.eot" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-solid-900.svg" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-solid-900.ttf" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-solid-900.woff" />
+    <None Include="wwwroot\fonts\fontawesome\webfonts\fa-solid-900.woff2" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.27" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
