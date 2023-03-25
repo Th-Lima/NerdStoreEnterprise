@@ -3,7 +3,7 @@ using System;
 
 namespace NSE.Catalog.API.Models
 {
-    public class Product : Entity
+    public class Product : Entity, IAggregateRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }
