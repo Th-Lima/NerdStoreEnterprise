@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using NSE.Identity.API.Extensions;
 using NSE.Identity.API.Models;
 using NSE.Identity.API.Services.Interfaces;
+using NSE.WebAPI.Core.Identity;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

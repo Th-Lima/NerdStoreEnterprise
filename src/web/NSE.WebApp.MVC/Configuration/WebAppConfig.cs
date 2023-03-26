@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSE.Identity.API.Extensions;
+using NSE.WebAPI.Core.Identity;
 using NSE.WebApp.MVC.Extensions.Middlewares;
 
 namespace NSE.WebApp.MVC.Configuration
