@@ -18,15 +18,15 @@ namespace NSE.Catalog.API.Configuration
 
             services.AddControllers();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Total",
-                    builder =>
-                    builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("Total",
+            //        builder =>
+            //        builder
+            //        .AllowAnyOrigin()
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader());
+            //});
         }
 
         public static void UseApiConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
@@ -36,7 +36,7 @@ namespace NSE.Catalog.API.Configuration
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

@@ -11,7 +11,16 @@ namespace NSE.WebApp.MVC.Configuration
         {
             services.AddHttpClient<IAuthService, AuthService>(config =>
             {
-                config.BaseAddress = new Uri(configuration.GetValue<string>("AuthenticateUrl"));
+                var authenticateUrl = configuration["Settings:AuthenticateUrl"];
+
+                config.BaseAddress = new Uri(authenticateUrl);
+            });
+
+            services.AddHttpClient<ICatalogService, CatalogService>(config =>
+            {
+                var catalogUrl = configuration["Settings:CatalogUrl"];
+
+                config.BaseAddress = new Uri(catalogUrl);
             });
         }
     }
