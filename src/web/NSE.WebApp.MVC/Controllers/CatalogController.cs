@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NSE.WebApp.MVC.Services;
+using NSE.WebApp.MVC.Services.Refit.Catalog;
 using System;
 using System.Threading.Tasks;
 
@@ -7,9 +7,9 @@ namespace NSE.WebApp.MVC.Controllers
 {
     public class CatalogController : MainController
     {
-        public readonly ICatalogService _catalogService;
+        public readonly ICatalogServiceRefit _catalogService;
 
-        public CatalogController(ICatalogService catalogService)
+        public CatalogController(ICatalogServiceRefit catalogService)
         {
             _catalogService = catalogService;
         }
