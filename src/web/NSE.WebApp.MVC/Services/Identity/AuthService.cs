@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace NSE.WebApp.MVC.Services
+namespace NSE.WebApp.MVC.Services.Identity
 {
     public class AuthService : Service, IAuthService
     {

@@ -5,9 +5,9 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NSE.WebApp.MVC.Services.Handlers
+namespace NSE.WebApp.MVC.Configuration.HttpClients
 {
-    public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler 
+    public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler
     {
         public readonly IUser _user;
 
@@ -23,7 +23,7 @@ namespace NSE.WebApp.MVC.Services.Handlers
             if (!string.IsNullOrEmpty(authorizationHeader))
                 request.Headers.Add("Authorization", new List<string>() { authorizationHeader });
 
-            var token =_user.GetUserToken();
+            var token = _user.GetUserToken();
 
             if (token != null)
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

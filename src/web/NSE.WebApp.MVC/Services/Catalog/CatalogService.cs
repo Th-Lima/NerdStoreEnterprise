@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace NSE.WebApp.MVC.Services
+namespace NSE.WebApp.MVC.Services.Catalog
 {
+    [Obsolete("Esta interface não está sendo utilizada de fato, pois estamos fazendo o processo de Http Service com o Refit. Utilizando a interface Refit.Catalog.ICatalogServiceRefit")]
     public class CatalogService : Service, ICatalogService
     {
         private readonly HttpClient _httpClient;
