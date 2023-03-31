@@ -22,7 +22,6 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
 
 
             var retryWaitPolicy = RetryPatternPoliciesCatalogApi.HandleRetryPatternCatalogApi();
-
             services.AddHttpClient<ICatalogService, CatalogService>(config =>
             {
                 var catalogUrl = configuration["Settings:CatalogUrl"];
