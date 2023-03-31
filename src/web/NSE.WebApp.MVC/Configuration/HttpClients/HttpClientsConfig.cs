@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Catalog;
+using NSE.WebApp.MVC.Services.Catalog;
 using NSE.WebApp.MVC.Services.Identity;
-using NSE.WebApp.MVC.Services.Refit.Catalog;
 using System;
 
 namespace NSE.WebApp.MVC.Configuration.HttpClients
@@ -19,20 +20,26 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
                 config.BaseAddress = new Uri(authenticateUrl);
             });
 
-            //services.AddHttpClient<ICatalogService, CatalogService>(config =>
-            //{
-            //    var catalogUrl = configuration["Settings:CatalogUrl"];
 
-            //    config.BaseAddress = new Uri(catalogUrl);
-            //}).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            var retryWaitPolicy = RetryPatternPoliciesCatalogApi.HandleRetryPatternCatalogApi();
 
-            services.AddHttpClient("Refit", config =>
+            services.AddHttpClient<ICatalogService, CatalogService>(config =>
             {
                 var catalogUrl = configuration["Settings:CatalogUrl"];
+
                 config.BaseAddress = new Uri(catalogUrl);
-            })
-            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-            .AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(retryWaitPolicy);
+            //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
+
+            //UTILIZAÇÃO DO REFIT
+            //services.AddHttpClient("Refit", config =>
+            //{
+            //    var catalogUrl = configuration["Settings:CatalogUrl"];
+            //    config.BaseAddress = new Uri(catalogUrl);
+            //})
+            //.AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            //.AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
         }
     }
 }
