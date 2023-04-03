@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Catalog;
 using NSE.WebApp.MVC.Services.Catalog;
 using NSE.WebApp.MVC.Services.Identity;
+using Polly;
 using System;
 
 namespace NSE.WebApp.MVC.Configuration.HttpClients
@@ -16,7 +17,7 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
             services.AddHttpClient<IAuthService, AuthService>(config =>
             {
                 var authenticateUrl = configuration["Settings:AuthenticateUrl"];
-
+                 
                 config.BaseAddress = new Uri(authenticateUrl);
             });
 
@@ -28,9 +29,11 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
 
                 config.BaseAddress = new Uri(catalogUrl);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-            .AddPolicyHandler(retryWaitPolicy);
+            .AddPolicyHandler(retryWaitPolicy)
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
             //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
 
+            #region Refit
             //UTILIZAÇÃO DO REFIT
             //services.AddHttpClient("Refit", config =>
             //{
@@ -39,6 +42,7 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
             //})
             //.AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             //.AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
+            #endregion
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Polly;
+using Polly.CircuitBreaker;
 using Refit;
 using System.Net;
 using System.Threading.Tasks;
@@ -33,6 +35,10 @@ namespace NSE.WebApp.MVC.Extensions.Middlewares
             {
                 HandleRequestExceptionAsync(httpContext, ex.StatusCode);
             }
+            catch (BrokenCircuitException)
+            {
+                HandleCircuitBreakerException(httpContext);
+            }
         }
 
         private static void HandleRequestExceptionAsync(HttpContext httpContext, HttpStatusCode statusCode)
@@ -45,6 +51,11 @@ namespace NSE.WebApp.MVC.Extensions.Middlewares
             }
 
             httpContext.Response.StatusCode = (int)statusCode;
+        }
+
+        public static void HandleCircuitBreakerException(HttpContext context)
+        {
+            context.Response.Redirect("/system-unavailable");
         }
     }
 }
