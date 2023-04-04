@@ -3,7 +3,7 @@ using System;
 
 namespace NSE.Client.API.Models
 {
-    public class Client : Entity, IAggregateRoot
+    public class Customer : Entity, IAggregateRoot
     {
         public string Name { get; private set; }
         public Email Email { get; private set; }
@@ -12,9 +12,9 @@ namespace NSE.Client.API.Models
         public Address Address { get; private set; }
 
         //EF Relation
-        protected Client(){}
+        protected Customer(){}
 
-        public Client(Guid id, string name, string email, string cpf)
+        public Customer(Guid id, string name, string email, string cpf)
         {
             Id = id;
             Name = name;

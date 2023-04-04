@@ -1,5 +1,6 @@
 ﻿using NSE.Core.DomainObjects;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NSE.Client.API.Models
 {
@@ -19,10 +20,11 @@ namespace NSE.Client.API.Models
 
         public string State { get; private set; }
 
-        public Guid ClientId { get; private set; }
+        [ForeignKey("CustomerId")]
+        public Guid CustomerId { get; private set; }
 
         //EF Relation
-        public Client Client { get; protected set; }
+        public Customer Customer { get; protected set; }
 
         public Address(string addressPlace, string numberAddress, string complement, string zipCode, string neighborhood, string city, string state)
         {
