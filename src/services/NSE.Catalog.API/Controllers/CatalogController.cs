@@ -30,9 +30,6 @@ namespace NSE.Catalog.API.Controllers
         [HttpGet("catalog/products/{id}")]
         public async Task<Product> ProductDetails(Guid id)
         {
-            //For Retry Pattern tests
-            throw new Exception("Error");
-            
             return await _productRepository.GetById(id);
         }
     }
