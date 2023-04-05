@@ -9,6 +9,13 @@ namespace NSE.Client.API.Application.Commands
 {
     public class CustomerCommandHandler : CommandHandler, IRequestHandler<RegisterCustomerCommand, ValidationResult>
     {
+        private readonly ICustomerRepository _customerRepository;
+
+        public CustomerCommandHandler(ICustomerRepository customerRepository)
+        {
+            _customerRepository = customerRepository;
+        }
+
         public async Task<ValidationResult> Handle(RegisterCustomerCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
@@ -16,17 +23,18 @@ namespace NSE.Client.API.Application.Commands
 
             var customer = new Customer(message.Id, message.Name, message.Email, message.Cpf);
 
-            //Validação negocio
+            var customerAlreadyExists = await _customerRepository.GetByCPF(customer.Cpf.Number);
 
-            //Persistir no banco
-
-            if (true) //Já existe um cliente com o cpf informado
+            if (customerAlreadyExists != null)
             {
                 AddError("Este CPF já está em uso");
+
                 return ValidationResult;
             }
 
-            return message.ValidationResult;
+            _customerRepository.Add(customer);
+
+            return await PersistData(_customerRepository.UnitOfWork);
         }
     }
 }
