@@ -1,31 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NSE.Identity.API.Controllers
+namespace NSE.WebAPI.Core.Controllers
 {
     [ApiController]
-    public abstract class MainController : Controller
+    public class MainController : Controller
     {
         protected ICollection<string> Errors = new List<string>();
 
         protected ActionResult CustomResponse(object result = null)
         {
-            if(ValidOperation())
+            if (ValidOperation())
                 return Ok(result);
 
             return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
-            {
-                { "Messages", Errors.ToArray() }
-            }));
+                {
+                    { "Messages", Errors.ToArray() }
+                }));
         }
 
         protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
             var errors = modelState.Values.SelectMany(x => x.Errors);
             foreach (var error in errors)
+            {
+                AddErrorsProcessing(error.ErrorMessage);
+            }
+
+            return CustomResponse();
+        }
+
+        protected ActionResult CustomResponse(ValidationResult validationResult)
+        {
+            foreach (var error in validationResult.Errors)
             {
                 AddErrorsProcessing(error.ErrorMessage);
             }
@@ -47,5 +57,6 @@ namespace NSE.Identity.API.Controllers
         {
             Errors.Clear();
         }
+
     }
 }

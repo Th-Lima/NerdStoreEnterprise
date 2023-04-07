@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSE.Identity.API.Models;
 using NSE.Identity.API.Services.Interfaces;
+using NSE.WebAPI.Core.Controllers;
 using System.Threading.Tasks;
 
 namespace NSE.Identity.API.Controllers
