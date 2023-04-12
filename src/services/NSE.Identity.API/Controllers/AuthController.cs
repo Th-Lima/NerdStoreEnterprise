@@ -16,14 +16,14 @@ namespace NSE.Identity.API.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtService _jwtService;
-
+       
         private IBus _bus;
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IJwtService jwtService, IBus bus)
+
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IJwtService jwtService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtService = jwtService;
-            _bus = bus;
         }
 
         [HttpPost("new-account")]
@@ -42,7 +42,6 @@ namespace NSE.Identity.API.Controllers
             var result = await _userManager.CreateAsync(user, userRegister.Password);
             if (result.Succeeded)
             {
-                //Evento Integração
                 var success = await RegisterCustomer(userRegister);
                                 
                 return CustomResponse(await _jwtService.GenerateJwtAsync(userRegister.Email));
