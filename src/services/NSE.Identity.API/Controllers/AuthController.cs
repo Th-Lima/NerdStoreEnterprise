@@ -1,9 +1,9 @@
-﻿using EasyNetQ;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NSE.Core.Messages.Integration;
 using NSE.Identity.API.Models;
 using NSE.Identity.API.Services.Interfaces;
+using NSE.MessageBus;
 using NSE.WebAPI.Core.Controllers;
 using System;
 using System.Threading.Tasks;
@@ -17,13 +17,14 @@ namespace NSE.Identity.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJwtService _jwtService;
        
-        private IBus _bus;
+        private readonly IMessageBus _bus;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IJwtService jwtService)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IJwtService jwtService, IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtService = jwtService;
+            _bus = bus;
         }
 
         [HttpPost("new-account")]
@@ -40,9 +41,16 @@ namespace NSE.Identity.API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, userRegister.Password);
+
             if (result.Succeeded)
             {
-                var success = await RegisterCustomer(userRegister);
+                var customerResult = await RegisterCustomer(userRegister);
+
+                if (!customerResult.ValidationResult.IsValid)
+                {
+                    await _userManager.DeleteAsync(user);
+                    return CustomResponse(customerResult.ValidationResult);
+                }
                                 
                 return CustomResponse(await _jwtService.GenerateJwtAsync(userRegister.Email));
             }
@@ -53,18 +61,6 @@ namespace NSE.Identity.API.Controllers
             }
 
             return CustomResponse();
-        }
-
-        private async Task<ResponseMessage> RegisterCustomer(UserIdentityRegister userRegister)
-        {
-            var user = await _userManager.FindByNameAsync(userRegister.Email);
-            var userRegistered = new UserRegisteredIntegrationEvent(Guid.Parse(user.Id), userRegister.Name, userRegister.Email, userRegister.Cpf);
-
-            _bus = RabbitHutch.CreateBus("host=localhost:5672");
-
-            var success = await _bus.Rpc.RequestAsync<UserRegisteredIntegrationEvent, ResponseMessage>(userRegistered);
-
-            return success;
         }
 
         [HttpPost("login")]
@@ -88,6 +84,22 @@ namespace NSE.Identity.API.Controllers
             AddErrorsProcessing("Usuário ou Senha incorretos");
 
             return CustomResponse();
+        }
+
+        private async Task<ResponseMessage> RegisterCustomer(UserIdentityRegister userRegister)
+        {
+            var user = await _userManager.FindByNameAsync(userRegister.Email);
+            var userRegistered = new UserRegisteredIntegrationEvent(Guid.Parse(user.Id), userRegister.Name, userRegister.Email, userRegister.Cpf);
+
+            try
+            {
+                return await _bus.RequestAsync<UserRegisteredIntegrationEvent, ResponseMessage>(userRegistered);
+            }
+            catch
+            {
+                await _userManager.DeleteAsync(user);
+                throw;
+            }
         }
     }
 }
