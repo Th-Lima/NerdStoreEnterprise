@@ -11,9 +11,11 @@ namespace NSE.MessageBus
     public class MessageBus : IMessageBus
     {
         private IBus _bus;
-
+        private IAdvancedBus _advancedBus;
         private readonly string _connectionString;
+
         public bool IsConnected => _bus?.Advanced.IsConnected ?? false;
+        public IAdvancedBus AdvancedBus => _bus?.Advanced;
 
         public MessageBus(string connectionString)
         {
@@ -37,13 +39,15 @@ namespace NSE.MessageBus
         }
         public void Subscribe<T>(string subscriptionId, Action<T> onMessage) where T : class
         {
-            throw new NotImplementedException();
+            TryConnect();
+
+            _bus.PubSub.Subscribe(subscriptionId, onMessage);
         }
         public void SubscribeAsync<T>(string subscriptionId, Func<T, Task> onMessage) where T : class
         {
             TryConnect();
 
-            _bus.PubSub.Subscribe(subscriptionId, onMessage);
+            _bus.PubSub.SubscribeAsync(subscriptionId, onMessage);
         }
 
         public TResponse Request<TRequest, TResponse>(TRequest request)
@@ -87,6 +91,7 @@ namespace NSE.MessageBus
             if (IsConnected)
                 return;
 
+            //Try 3 times, if not successful exception is thrown (If the exception is thrown, it means that it was not possible to connect)
             var policy = Policy.Handle<EasyNetQException>()
                 .Or<BrokerUnreachableException>()
                 .WaitAndRetry(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
@@ -94,7 +99,18 @@ namespace NSE.MessageBus
             policy.Execute(() =>
             {
                 _bus = RabbitHutch.CreateBus(_connectionString);
+                _advancedBus = _bus.Advanced;
+                _advancedBus.Disconnected += OnDisconnect;
             });
+        }
+
+        private void OnDisconnect(object s, EventArgs e)
+        {
+            var policy = Policy.Handle<EasyNetQException>()
+                .Or<BrokerUnreachableException>()
+                .RetryForever();
+
+            policy.Execute(TryConnect);
         }
 
         public void Dispose()

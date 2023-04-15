@@ -24,8 +24,7 @@ namespace NSE.Client.API.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request =>
-                await RegisterCustomer(request));
+            SetResponder();
 
             return Task.CompletedTask;
         }
@@ -45,6 +44,19 @@ namespace NSE.Client.API.Services
             }
 
             return new ResponseMessage(success);
+        }
+
+        private void OnConnect(object s, EventArgs e)
+        {
+            SetResponder();
+        }
+
+        private void SetResponder()
+        {
+            _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request =>
+               await RegisterCustomer(request));
+
+            _bus.AdvancedBus.Connected += OnConnect;
         }
     }
 }
