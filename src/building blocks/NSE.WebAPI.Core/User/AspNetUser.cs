@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace NSE.WebApp.MVC.Extensions
+namespace NSE.WebAPI.Core.User
 {
-    public class AspNetUser : IUser
+    public class AspNetUser : IAspNetUser
     {
         private readonly IHttpContextAccessor _contextAccessor;
 

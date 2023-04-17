@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.DependencyInjection;
+using NSE.WebAPI.Core.User;
 using NSE.WebApp.MVC.Extensions;
 
 namespace NSE.WebApp.MVC.Configuration
@@ -13,7 +14,7 @@ namespace NSE.WebApp.MVC.Configuration
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<IUser, AspNetUser>();
+            services.AddScoped<IAspNetUser, AspNetUser>();
         }
     }
 }

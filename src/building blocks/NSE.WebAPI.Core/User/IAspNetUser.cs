@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace NSE.WebApp.MVC.Extensions
+namespace NSE.WebAPI.Core.User
 {
-    public interface IUser
+    public interface IAspNetUser
     {
         string Name { get; }
 
