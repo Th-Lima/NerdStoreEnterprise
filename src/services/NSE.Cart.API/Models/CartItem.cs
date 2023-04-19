@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NSE.Cart.API.Models.Validations;
+using System;
 
 namespace NSE.Cart.API.Models
 {
@@ -17,6 +18,26 @@ namespace NSE.Cart.API.Models
         public CartItem()
         {
             Id = Guid.NewGuid();
+        }
+
+        internal void JoinCart(Guid cartId)
+        {
+            CartId = cartId;
+        }
+
+        internal decimal CalculateValue()
+        {
+            return Amount * Value;
+        }
+
+        internal void AddUnit(int unit)
+        {
+            Amount += unit;
+        }
+
+        internal bool IsValid()
+        {
+            return new CartItemValidation().Validate(this).IsValid;
         }
     }
 }
