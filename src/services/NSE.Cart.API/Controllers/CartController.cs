@@ -6,6 +6,7 @@ using NSE.Cart.API.Models;
 using NSE.WebAPI.Core.Controllers;
 using NSE.WebAPI.Core.User;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NSE.Cart.API.Controllers
@@ -38,6 +39,7 @@ namespace NSE.Cart.API.Controllers
             else
                 HandleCartAlreadyExists(cart, cartItem);
 
+            ValidateCart(cart);
             if (!ValidOperation())
                 return CustomResponse();
 
@@ -57,6 +59,10 @@ namespace NSE.Cart.API.Controllers
 
             cart.UpdateUnit(item, item.Amount);
 
+            ValidateCart(cart);
+            if (!ValidOperation())
+                return CustomResponse();
+
             _context.CartItems.Update(cartItem);
             _context.CartCustomers.Update(cart);
 
@@ -73,6 +79,10 @@ namespace NSE.Cart.API.Controllers
             var cartItem = await GetCartItemValidated(productId, cart);
 
             if (cartItem == null)
+                return CustomResponse();
+
+            ValidateCart(cart);
+            if (!ValidOperation())
                 return CustomResponse();
 
             cart.RemoveItem(cartItem);
@@ -146,6 +156,16 @@ namespace NSE.Cart.API.Controllers
 
             if (result <= 0)
                 AddErrorsProcessing("Não foi possível persistir os dados no banco");
+        }
+
+        private bool ValidateCart(CartCustomer cart)
+        {
+            if (cart.IsValid())
+                return true;
+
+            cart.ValidationResult.Errors.ToList().ForEach(e => AddErrorsProcessing(e.ErrorMessage));
+
+            return false;
         }
     }
 }
