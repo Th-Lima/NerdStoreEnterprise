@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace NSE.Cart.API.Models
 {
@@ -55,6 +56,34 @@ namespace NSE.Cart.API.Models
 
             Itens.Add(item);
             CalculateCartValue();
+        }
+
+        internal void UpdateItem(CartItem item)
+        {
+            if(!item.IsValid())
+                return;
+
+            item.JoinCart(Id);
+
+            var itemExists = GetByProductId(item.ProductId);
+
+            Itens.Remove(itemExists);
+            Itens.Add(item);
+
+            CalculateCartValue();
+        }
+
+        internal void RemoveItem(CartItem item)
+        {
+            Itens.Remove(GetByProductId(item.ProductId));
+
+            CalculateCartValue();
+        }
+
+        internal void UpdateUnit(CartItem item, int unit)
+        {
+            item.UpdateUnitItem(unit);
+            UpdateItem(item);
         }
     }
 }

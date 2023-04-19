@@ -41,23 +41,47 @@ namespace NSE.Cart.API.Controllers
             if (!ValidOperation())
                 return CustomResponse();
 
-            var result = await _context.SaveChangesAsync();
-
-            if(result <= 0)
-                AddErrorsProcessing("Não foi possível persistir os dados no banco");
+            await PersistData();
 
             return CustomResponse();
         }
 
         [HttpPut("cart/{productId}")]
-        public async Task<IActionResult> UpdateCartItem(CartItem cartItem)
+        public async Task<IActionResult> UpdateCartItem(Guid productId, CartItem item)
         {
+            var cart = await GetCartCustomer();
+            var cartItem = await GetCartItemValidated(productId, cart, item);
+
+            if(cartItem == null)
+                return CustomResponse();
+
+            cart.UpdateUnit(item, item.Amount);
+
+            _context.CartItems.Update(cartItem);
+            _context.CartCustomers.Update(cart);
+
+            await PersistData();
+
             return CustomResponse();
         }
 
         [HttpDelete("cart/{productId}")]
-        public async Task<IActionResult> DeleteCartItem(Guid cartItemId)
+        public async Task<IActionResult> DeleteCartItem(Guid productId)
         {
+            var cart = await GetCartCustomer();
+
+            var cartItem = await GetCartItemValidated(productId, cart);
+
+            if (cartItem == null)
+                return CustomResponse();
+
+            cart.RemoveItem(cartItem);
+
+            _context.CartItems.Remove(cartItem);
+            _context.CartCustomers.Remove(cart);
+
+            await PersistData();
+
             return CustomResponse();
         }
 
@@ -88,6 +112,40 @@ namespace NSE.Cart.API.Controllers
                 _context.CartItems.Add(item);
 
             _context.CartCustomers.Update(cart);
+        }
+
+        private async Task<CartItem> GetCartItemValidated(Guid productId, CartCustomer cart, CartItem item = null)
+        {
+            if(item != null && productId != item.ProductId)
+            {
+                AddErrorsProcessing("O item não corresponde ao informado");
+                return null;
+            }
+
+            if(cart == null)
+            {
+                AddErrorsProcessing("Carrinho não encontrado");
+                return null;
+            }
+
+            var itemCart = await _context.CartItems
+                .FirstOrDefaultAsync(x => x.CartId == cart.Id && x.ProductId == productId);
+
+            if(itemCart == null || !cart.CartItemAlreadyExists(itemCart))
+            {
+                AddErrorsProcessing("O item não está no carrinho");
+                return null;
+            }
+
+            return itemCart;
+        }
+
+        private async Task PersistData()
+        {
+            var result = await _context.SaveChangesAsync();
+
+            if (result <= 0)
+                AddErrorsProcessing("Não foi possível persistir os dados no banco");
         }
     }
 }
