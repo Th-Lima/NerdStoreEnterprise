@@ -23,7 +23,7 @@ namespace NSE.Cart.API.Models.Validations
                 .LessThanOrEqualTo(CartCustomer.MAX_AMOUNT_ITEM)
                 .WithMessage(item => $"A quantidade máxima do {item.Name} é {CartCustomer.MAX_AMOUNT_ITEM}");
 
-            RuleFor(c => c.Value)
+            RuleFor(c => c.Price)
                 .GreaterThan(0)
                 .WithMessage(item => $"O valor do {item.Name} precisa ser maior que 0");
         }

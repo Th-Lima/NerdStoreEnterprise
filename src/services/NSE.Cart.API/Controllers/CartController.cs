@@ -39,7 +39,6 @@ namespace NSE.Cart.API.Controllers
             else
                 HandleCartAlreadyExists(cart, cartItem);
 
-            ValidateCart(cart);
             if (!ValidOperation())
                 return CustomResponse();
 
@@ -107,6 +106,8 @@ namespace NSE.Cart.API.Controllers
             var cart = new CartCustomer(_user.GetUserId());
             cart.AddItem(item);
 
+            ValidateCart(cart);
+
             _context.CartCustomers.Add(cart);
         }
 
@@ -116,11 +117,13 @@ namespace NSE.Cart.API.Controllers
 
             cart.AddItem(item);
 
+            ValidateCart(cart);
+
             if (productItemExists)
                 _context.CartItems.Update(cart.GetByProductId(item.ProductId));
             else
                 _context.CartItems.Add(item);
-
+            
             _context.CartCustomers.Update(cart);
         }
 

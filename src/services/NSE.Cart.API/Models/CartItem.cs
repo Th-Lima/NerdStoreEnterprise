@@ -1,5 +1,6 @@
 ﻿using NSE.Cart.API.Models.Validations;
 using System;
+using System.Text.Json.Serialization;
 
 namespace NSE.Cart.API.Models
 {
@@ -9,10 +10,12 @@ namespace NSE.Cart.API.Models
         public Guid ProductId { get; set; }
         public string Name { get; set; }
         public int Amount { get; set; }
-        public decimal Value { get; set; }
+        public decimal Price { get; set; }
         public string Image { get; set; }
 
         public Guid CartId { get; set; }
+
+        [JsonIgnore]
         public CartCustomer CartCustomer { get; set; }
 
         public CartItem()
@@ -27,7 +30,7 @@ namespace NSE.Cart.API.Models
 
         internal decimal CalculateValue()
         {
-            return Amount * Value;
+            return Amount * Price;
         }
 
         internal void AddUnit(int unit)

@@ -36,7 +36,7 @@
                                                 <td>
                                                     <figure class="itemside">
                                                         <div class="aside">
-                                                            <img src="~/images/produtos/@item.Image" alt="@item.Name" class="img-sm">
+                                                            <img src="~/images/products/@item.Image" alt="@item.Name" class="img-sm">
                                                         </div>
                                                         <figcaption class="info">
                                                             <a asp-controller="Catalog" asp-action="ProductDetail" asp-route-id="@item.ProductId"><h6 style="padding-top: 10px" class="title text-dark">@item.Name</h6></a>
@@ -46,8 +46,8 @@
                                                 </td>
                                                 <td>
                                                     <div class="price-wrap">
-                                                        <var class="price"> @this.CurrencyFormat(item.Value * item.Amount)</var>
-                                                        <small class="text-muted"> @this.CurrencyFormat(item.Value) cada</small>
+                                                        <var class="price"> @this.CurrencyFormat(item.Price * item.Amount)</var>
+                                                        <small class="text-muted"> @this.CurrencyFormat(item.Price) cada</small>
                                                     </div>
                                                 </td>
                                                 <form method="post" asp-controller="Cart" asp-action="UpdateCartItem">
