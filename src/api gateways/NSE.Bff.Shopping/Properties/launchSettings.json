@@ -1,4 +1,4 @@
-{
+﻿{
   "profiles": {
     "IIS - Dev": {
       "commandName": "IISExpress",
@@ -39,7 +39,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:63863",
+      "applicationUrl": "http://localhost:48189",
       "sslPort": 0
     }
   }
