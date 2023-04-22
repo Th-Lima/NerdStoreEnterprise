@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using NSE.Core.Communication;
 
 namespace NSE.WebApp.MVC.Models
 {

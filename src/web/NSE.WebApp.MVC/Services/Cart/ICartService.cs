@@ -1,6 +1,7 @@
-﻿using NSE.WebApp.MVC.Models;
-using System.Threading.Tasks;
+﻿using NSE.Core.Communication;
+using NSE.WebApp.MVC.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Services.Cart
 {
