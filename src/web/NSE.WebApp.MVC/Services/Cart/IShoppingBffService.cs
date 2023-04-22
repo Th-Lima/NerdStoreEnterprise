@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Services.Cart
 {
-    public interface ICartService
+    public interface IShoppingBffService
     {
         Task<CartViewModel> GetCart();
         Task<ResponseResult> AddCartItem(ItemProductViewModel product);

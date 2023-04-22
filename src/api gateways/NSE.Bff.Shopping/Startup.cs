@@ -37,6 +37,7 @@ namespace NSE.Bff.Shopping
             services.AddSwaggerConfiguration();
 
             services.RegisterServices();
+            services.RegisterHttpClients();
 
             services.AddMessageBusConfiguration(Configuration);
         }

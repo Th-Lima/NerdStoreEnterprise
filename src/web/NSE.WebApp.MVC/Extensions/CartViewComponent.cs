@@ -7,9 +7,9 @@ namespace NSE.WebApp.MVC.Extensions
 {
     public class CartViewComponent : ViewComponent
     {
-        private readonly ICartService _cartService;
+        private readonly IShoppingBffService _cartService;
 
-        public CartViewComponent(ICartService carrinhoService)
+        public CartViewComponent(IShoppingBffService carrinhoService)
         {
             _cartService = carrinhoService;
         }

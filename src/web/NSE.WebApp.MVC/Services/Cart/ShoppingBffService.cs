@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Services.Cart
 {
-    public class CartService : Service, ICartService
+    public class ShoppingBffService : Service, IShoppingBffService
     {
         private readonly HttpClient _httpClient;
 
-        public CartService(HttpClient httpClient)
+        public ShoppingBffService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

@@ -39,7 +39,7 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
             //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
 
             var retryWaitCartPolicy = RetryPatternPoliciesCartApi.HandleRetryPatternCartApi();
-            services.AddHttpClient<ICartService, CartService>(config =>
+            services.AddHttpClient<IShoppingBffService, ShoppingBffService>(config =>
             {
                 var cartUrl = configuration["Settings:CartUrl"];
 

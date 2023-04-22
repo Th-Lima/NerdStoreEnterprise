@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NSE.Core.Communication;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,6 +42,26 @@ namespace NSE.WebAPI.Core.Controllers
             }
 
             return CustomResponse();
+        }
+
+        protected ActionResult CustomResponse(ResponseResult respnseResult)
+        {
+            ResponseHasErrors(respnseResult);
+
+            return CustomResponse();
+        }
+
+        protected bool ResponseHasErrors(ResponseResult responseResult)
+        {
+            if (responseResult == null || responseResult.Errors.Messages.Any())
+                return false;
+
+            foreach (var message in responseResult.Errors.Messages)
+            {
+                AddErrorsProcessing(message);
+            }
+
+            return true;
         }
 
         protected bool ValidOperation()

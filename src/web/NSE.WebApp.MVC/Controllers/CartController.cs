@@ -9,10 +9,10 @@ namespace NSE.WebApp.MVC.Controllers
 {
     public class CartController : MainController
     {
-        private readonly ICartService _cartService;
+        private readonly IShoppingBffService _cartService;
         private readonly ICatalogService _catalogService;
 
-        public CartController(ICartService cartService, ICatalogService catalogService)
+        public CartController(IShoppingBffService cartService, ICatalogService catalogService)
         {
             _cartService = cartService;
             _catalogService = catalogService;
