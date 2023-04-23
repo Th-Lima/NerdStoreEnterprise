@@ -56,7 +56,7 @@ namespace NSE.Cart.API.Controllers
             if(cartItem == null)
                 return CustomResponse();
 
-            cart.UpdateUnit(item, item.Amount);
+            cart.UpdateUnit(cartItem, item.Amount);
 
             ValidateCart(cart);
             if (!ValidOperation())
@@ -87,7 +87,7 @@ namespace NSE.Cart.API.Controllers
             cart.RemoveItem(cartItem);
 
             _context.CartItems.Remove(cartItem);
-            _context.CartCustomers.Remove(cart);
+            _context.CartCustomers.Update(cart);
 
             await PersistData();
 

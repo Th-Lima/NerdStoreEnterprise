@@ -25,7 +25,7 @@ namespace NSE.Bff.Shopping.Controllers
         [Route("shopping/cart")]
         public async Task<IActionResult> Index()
         {
-            return CustomResponse(_cartService.GetCart());
+            return CustomResponse(await _cartService.GetCart());
         }
 
         [HttpGet]

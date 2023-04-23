@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Polly;
 using Polly.CircuitBreaker;
 using Refit;
 using System.Net;

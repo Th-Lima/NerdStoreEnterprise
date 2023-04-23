@@ -38,10 +38,10 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
             //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMilliseconds(600)));
 
-            var retryWaitCartPolicy = RetryPatternPoliciesCartApi.HandleRetryPatternCartApi();
+            var retryWaitCartPolicy = RetryPatternPoliciesShoppingBffApi.HandleRetryPatternShoppingBffApi();
             services.AddHttpClient<IShoppingBffService, ShoppingBffService>(config =>
             {
-                var cartUrl = configuration["Settings:CartUrl"];
+                var cartUrl = configuration["Settings:ShoppingBffUrl"];
 
                 config.BaseAddress = new Uri(cartUrl);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()

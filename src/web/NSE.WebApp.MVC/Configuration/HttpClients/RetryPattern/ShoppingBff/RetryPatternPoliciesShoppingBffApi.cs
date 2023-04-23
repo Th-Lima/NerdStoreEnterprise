@@ -6,9 +6,9 @@ using Polly;
 
 namespace NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Cart
 {
-    public class RetryPatternPoliciesCartApi
+    public class RetryPatternPoliciesShoppingBffApi
     {
-        public static AsyncRetryPolicy<HttpResponseMessage> HandleRetryPatternCartApi()
+        public static AsyncRetryPolicy<HttpResponseMessage> HandleRetryPatternShoppingBffApi()
         {
             var retryPolicy = HttpPolicyExtensions
                 .HandleTransientHttpError()

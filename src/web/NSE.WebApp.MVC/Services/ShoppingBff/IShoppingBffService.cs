@@ -8,8 +8,9 @@ namespace NSE.WebApp.MVC.Services.Cart
     public interface IShoppingBffService
     {
         Task<CartViewModel> GetCart();
-        Task<ResponseResult> AddCartItem(ItemProductViewModel product);
-        Task<ResponseResult> UpdateCartItem(Guid productId, ItemProductViewModel product);
+        Task<int> GetCartAmount();
+        Task<ResponseResult> AddCartItem(ItemCartViewModel product);
+        Task<ResponseResult> UpdateCartItem(Guid productId, ItemCartViewModel product);
         Task<ResponseResult> RemoveCartItem(Guid productId);
     }
 }

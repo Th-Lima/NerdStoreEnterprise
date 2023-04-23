@@ -30,6 +30,10 @@ namespace NSE.Bff.Shopping
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddControllers().AddNewtonsoftJson(options =>
+            //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            //);
+
             services.AddApiConfiguration(Configuration);
 
             services.AddJwtConfiguration(Configuration);

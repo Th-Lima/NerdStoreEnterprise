@@ -29,7 +29,7 @@ namespace NSE.Cart.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("TotalValue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal");
 
                     b.HasKey("Id");
 
@@ -58,7 +58,7 @@ namespace NSE.Cart.API.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
