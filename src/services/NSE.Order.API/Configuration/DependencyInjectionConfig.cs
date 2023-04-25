@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NSE.Core.Mediator;
+using NSE.Order.API.Application.Queries;
+using NSE.Order.Domain.Vouchers;
+using NSE.Order.Infra.Data.Repository;
 using NSE.WebAPI.Core.User;
-using System.ComponentModel.DataAnnotations;
 
 namespace NSE.Order.API.Configuration
 {
@@ -22,12 +24,12 @@ namespace NSE.Order.API.Configuration
 
             // Application
             services.AddScoped<IMediatorHandler, MediatorHandler>();
-            //services.AddScoped<IVoucherQueries, VoucherQueries>();
+            services.AddScoped<IVoucherQueries, VoucherQueries>();
             //services.AddScoped<IPedidoQueries, PedidoQueries>();
 
             // Data
             //services.AddScoped<IPedidoRepository, PedidoRepository>();
-            //services.AddScoped<IVoucherRepository, VoucherRepository>();
+            services.AddScoped<IVoucherRepository, VoucherRepository>();
             //services.AddScoped<PedidosContext>();
         }
     }
