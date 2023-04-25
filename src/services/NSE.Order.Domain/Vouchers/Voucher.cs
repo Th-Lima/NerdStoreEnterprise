@@ -1,4 +1,5 @@
 ﻿using NSE.Core.DomainObjects;
+using NSE.Order.Domain.Vouchers.Specs;
 using System;
 
 namespace NSE.Order.Domain.Vouchers
@@ -16,13 +17,13 @@ namespace NSE.Order.Domain.Vouchers
         public bool Active { get; private set; }
         public bool Used { get; private set; }
 
-        //public bool IsValidForUtilization()
-        //{
-        //    return new VoucherAtivoSpecification()
-        //        .And(new VoucherDataSpecification())
-        //        .And(new VoucherQuantidadeSpecification())
-        //        .IsSatisfiedBy(this);
-        //}
+        public bool IsValidForUtilization()
+        {
+            return new VoucherActiveSpecification()
+                .And(new VoucherDateSpecification())
+                .And(new VoucherAmountSpecification())
+                .IsSatisfiedBy(this);
+        }
 
         public void MarkAsUtilized()
         {
