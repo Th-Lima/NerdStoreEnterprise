@@ -69,7 +69,8 @@ namespace NSE.WebApp.MVC.Services.Cart
 
             var response = await _httpClient.PostAsync("/shopping/cart/apply-voucher/", itemContent);
 
-            if (!HandleErrorResponse(response)) return await DeserializeObjectResponse<ResponseResult>(response);
+            if (!HandleErrorResponse(response)) 
+                return await DeserializeObjectResponse<ResponseResult>(response);
 
             return ReturnOk();
         }

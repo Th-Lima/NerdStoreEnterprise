@@ -12,5 +12,6 @@ namespace NSE.WebApp.MVC.Services.Cart
         Task<ResponseResult> AddCartItem(ItemCartViewModel product);
         Task<ResponseResult> UpdateCartItem(Guid productId, ItemCartViewModel product);
         Task<ResponseResult> RemoveCartItem(Guid productId);
+        Task<ResponseResult> ApplyVoucherCart(string voucher);
     }
 }

@@ -16,7 +16,7 @@ namespace NSE.Bff.Shopping.Extensions
             _aspNetUser = aspNetUser;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var authorizationHeader = _aspNetUser.GetHttpContext().Request.Headers["Authorization"];
 
