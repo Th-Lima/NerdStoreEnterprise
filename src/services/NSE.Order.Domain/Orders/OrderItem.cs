@@ -1,8 +1,9 @@
-﻿using System;
+﻿using NSE.Core.DomainObjects;
+using System;
 
 namespace NSE.Order.Domain.Orders
 {
-    public class OrderItem
+    public class OrderItem : Entity
     {
         public Guid OrderId { get; private set; }
         public Guid ProductId { get; private set; }
