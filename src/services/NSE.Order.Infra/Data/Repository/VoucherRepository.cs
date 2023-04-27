@@ -2,7 +2,6 @@
 using NSE.Core.Data;
 using NSE.Order.Domain.Vouchers;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NSE.Order.Infra.Data.Repository
@@ -26,12 +25,12 @@ namespace NSE.Order.Infra.Data.Repository
 
         public void Update(Voucher voucher)
         {
-            throw new NotImplementedException();
+            _context.Vouchers.Update(voucher);
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _context.Dispose();
         }
     }
 }

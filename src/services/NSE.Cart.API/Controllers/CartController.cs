@@ -96,7 +96,7 @@ namespace NSE.Cart.API.Controllers
 
         [HttpPost]
         [Route("cart/apply-voucher")]
-        public async Task<IActionResult> AplicarVoucher(Voucher voucher)
+        public async Task<IActionResult> ApplyVoucher(Voucher voucher)
         {
             var carrinho = await GetCartCustomer();
 
