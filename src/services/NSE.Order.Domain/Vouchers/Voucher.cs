@@ -36,7 +36,8 @@ namespace NSE.Order.Domain.Vouchers
         public void DebitAmount()
         {
             Amount -= 1;
-            if (Amount >= 1) return;
+            if (Amount >= 1) 
+                return;
 
             MarkAsUtilized();
         }

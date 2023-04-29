@@ -31,28 +31,28 @@ namespace NSE.Order.API.Application.Commands
                 return message.ValidationResult;
 
             // Mapear Pedido
-            var pedido = MappingOrder(message);
+            var order = MappingOrder(message);
 
             // Aplicar voucher se houver
-            if (!await ApplyVoucher(message, pedido)) 
+            if (!await ApplyVoucher(message, order)) 
                 return ValidationResult;
 
             // Validar pedido
-            if (!ValidateOrder(pedido)) 
+            if (!ValidateOrder(order)) 
                 return ValidationResult;
 
             // Processar pagamento
-            if (!ProcessPayment(pedido)) 
+            if (!ProcessPayment(order)) 
                 return ValidationResult;
 
             // Se pagamento tudo ok!
-            pedido.AuthorizeOrder();
+            order.AuthorizeOrder();
 
             // Adicionar Evento
-            pedido.AddEvent(new OrderRealizedEvent(pedido.Id, pedido.ClientId));
+            order.AddEvent(new OrderRealizedEvent(order.Id, order.ClientId));
 
             // Adicionar Pedido Repositorio
-            _orderRepository.Add(pedido);
+            _orderRepository.Add(order);
 
             // Persistir dados de pedido e voucher
             return await PersistData(_orderRepository.UnitOfWork);
@@ -60,7 +60,7 @@ namespace NSE.Order.API.Application.Commands
 
         private Domain.Orders.Order MappingOrder(AddOrderCommand message)
         {
-            var endereco = new Address
+            var address = new Address
             {
                 AddressPlace = message.Address.AddressPlace,
                 Number = message.Address.NumberAddress,
@@ -71,11 +71,11 @@ namespace NSE.Order.API.Application.Commands
                 State = message.Address.State
             };
 
-            var pedido = new Domain.Orders.Order(message.ClientId, message.TotalValue, message.OrderItems.Select(OrderItemDto.ForOrderItemDto).ToList(),
+            var order = new Domain.Orders.Order(message.ClientId, message.TotalValue, message.OrderItems.Select(OrderItemDto.ForOrderItemDto).ToList(),
                 message.VoucherUsed, message.Discount);
 
-            pedido.AssignAddress(endereco);
-            return pedido;
+            order.AssignAddress(address);
+            return order;
         }
 
         private async Task<bool> ApplyVoucher(AddOrderCommand message, Domain.Orders.Order order)

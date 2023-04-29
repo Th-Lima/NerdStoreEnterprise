@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation.Results;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using NSE.Core.Mediator;
+using NSE.Order.API.Application.Commands;
 using NSE.Order.API.Application.Queries;
+using NSE.Order.Domain.Orders;
 using NSE.Order.Domain.Vouchers;
+using NSE.Order.Infra.Data;
 using NSE.Order.Infra.Data.Repository;
 using NSE.WebAPI.Core.User;
 
@@ -17,7 +22,7 @@ namespace NSE.Order.API.Configuration
             services.AddScoped<IAspNetUser, AspNetUser>();
 
             // Commands
-            //services.AddScoped<IRequestHandler<AdicionarPedidoCommand, ValidationResult>, PedidoCommandHandler>();
+            services.AddScoped<IRequestHandler<AddOrderCommand, ValidationResult>, OrderCommandHandler>();
 
             // Events
             //services.AddScoped<INotificationHandler<PedidoRealizadoEvent>, PedidoEventHandler>();
@@ -28,9 +33,9 @@ namespace NSE.Order.API.Configuration
             //services.AddScoped<IPedidoQueries, PedidoQueries>();
 
             // Data
-            //services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IVoucherRepository, VoucherRepository>();
-            //services.AddScoped<PedidosContext>();
+            services.AddScoped<OrderContext>();
         }
     }
 }
