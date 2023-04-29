@@ -30,7 +30,7 @@ namespace NSE.Order.API.Configuration
             // Application
             services.AddScoped<IMediatorHandler, MediatorHandler>();
             services.AddScoped<IVoucherQueries, VoucherQueries>();
-            //services.AddScoped<IPedidoQueries, PedidoQueries>();
+            services.AddScoped<IOrderQueries, OrderQueries>();
 
             // Data
             services.AddScoped<IOrderRepository, OrderRepository>();
