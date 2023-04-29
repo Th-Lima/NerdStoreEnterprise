@@ -38,6 +38,7 @@ namespace NSE.Cart.API
 
             services.RegisterServices();
 
+            services.AddMessageBusConfiguration(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

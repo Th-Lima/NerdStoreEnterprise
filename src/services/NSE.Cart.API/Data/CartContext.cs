@@ -56,7 +56,7 @@ namespace NSE.Cart.API.Data
 
             foreach (var relantionship in modelBuilder.Model.GetEntityTypes().SelectMany(x => x.GetForeignKeys())) 
             {
-                relantionship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+                relantionship.DeleteBehavior = DeleteBehavior.Cascade;
             }
         }
     }
