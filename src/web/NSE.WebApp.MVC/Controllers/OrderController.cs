@@ -58,8 +58,8 @@ namespace NSE.WebApp.MVC.Controllers
                 var cart = await _shoppingBffService.GetCart();
                 if (cart.Itens.Count == 0) return RedirectToAction("Index", "Cart");
 
-                var pedidoMap = _shoppingBffService.MapForOrder(cart, null);
-                return View("Payment", pedidoMap);
+                var orderMap = _shoppingBffService.MapForOrder(cart, null);
+                return View("Payment", orderMap);
             }
 
             return RedirectToAction("OrderConcluded");
