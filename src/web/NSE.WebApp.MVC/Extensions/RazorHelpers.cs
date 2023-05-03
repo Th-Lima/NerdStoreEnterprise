@@ -24,6 +24,11 @@ namespace NSE.WebApp.MVC.Extensions
             return price > 0 ? string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", price) : "Gratuito";
         }
 
+        private static string CurrencyFormat(decimal valor)
+        {
+            return string.Format(Thread.CurrentThread.CurrentCulture, "{0:C}", valor);
+        }
+
         public static string StockMessage(this RazorPage page, int amount)
         {
             return amount > 0 ? $"Apenas {amount} em estoque!" : "Produto esgotado!";
@@ -33,6 +38,44 @@ namespace NSE.WebApp.MVC.Extensions
         {
             return unit > 1 ? $"{unit} unidades" : $"{unit} unidade";
         }
+        public static string UnitByProductsTotalValue(this RazorPage page, int unit, decimal price)
+        {
+            return $"{unit}x {CurrencyFormat(price)} = Total: {CurrencyFormat(price * unit)}";
+        }
+
+        public static string DisplayStatus(this RazorPage page, int status)
+        {
+            var statusMessage = "";
+            var statusClass = "";
+
+            switch (status)
+            {
+                case 1:
+                    statusClass = "info";
+                    statusMessage = "Em aprovação";
+                    break;
+                case 2:
+                    statusClass = "primary";
+                    statusMessage = "Aprovado";
+                    break;
+                case 3:
+                    statusClass = "danger";
+                    statusMessage = "Recusado";
+                    break;
+                case 4:
+                    statusClass = "success";
+                    statusMessage = "Entregue";
+                    break;
+                case 5:
+                    statusClass = "warning";
+                    statusMessage = "Cancelado";
+                    break;
+
+            }
+
+            return $"<span class='badge badge-{statusClass}'>{statusMessage}</span>";
+        }
+
 
         public static string SelectOptionsByAmount(this RazorPage page, int amount, int valueSelected = 0)
         {

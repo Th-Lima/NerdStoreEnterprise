@@ -1,6 +1,7 @@
 ﻿using NSE.Core.Communication;
 using NSE.WebApp.MVC.Models;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace NSE.WebApp.MVC.Services.Cart
             _httpClient = httpClient;
         }
 
-        #region Carrinho
+        #region Cart
 
         public async Task<CartViewModel> GetCart()
         {
@@ -73,6 +74,66 @@ namespace NSE.WebApp.MVC.Services.Cart
                 return await DeserializeObjectResponse<ResponseResult>(response);
 
             return ReturnOk();
+        }
+        #endregion
+
+        #region Order
+        public async Task<ResponseResult> FinalizeOrder(OrderTransactionViewModel orderTransaction)
+        {
+            var orderContent = GetContent(orderTransaction);
+
+            var response = await _httpClient.PostAsync("/shopping/order/", orderContent);
+
+            if (!HandleErrorResponse(response)) 
+                return await DeserializeObjectResponse<ResponseResult>(response);
+
+            return ReturnOk();
+        }
+
+        public async Task<OrderViewModel> GetLastOrder()
+        {
+            var response = await _httpClient.GetAsync("/shopping/order/last/");
+
+            HandleErrorResponse(response);
+
+            return await DeserializeObjectResponse<OrderViewModel>(response);
+        }
+
+        public async Task<IEnumerable<OrderViewModel>> GetListByCustomerId()
+        {
+            var response = await _httpClient.GetAsync("/shopping/order/list-customer/");
+
+            HandleErrorResponse(response);
+
+            return await DeserializeObjectResponse<IEnumerable<OrderViewModel>>(response);
+        }
+
+        public OrderTransactionViewModel MapForOrder(CartViewModel cart, AddressViewModel Address)
+        {
+            var order = new OrderTransactionViewModel
+            {
+                TotalValue = cart.TotalValue,
+                Itens = cart.Itens,
+                Discount = cart.Discount,
+                VoucherUsed = cart.VoucherUsed,
+                VoucherCode = cart.Voucher?.Code
+            };
+
+            if (Address != null)
+            {
+                order.Address = new AddressViewModel
+                {
+                    AddressPlace = Address.AddressPlace,
+                    NumberAddress = Address.NumberAddress,
+                    Neighborhood = Address.Neighborhood,
+                    ZipCode = Address.ZipCode,
+                    Complement = Address.Complement,
+                    City = Address.City,
+                    State = Address.State
+                };
+            }
+
+            return order;
         }
         #endregion
     }

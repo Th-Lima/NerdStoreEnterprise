@@ -26,7 +26,7 @@ namespace NSE.Client.API.Models
         //EF Relation
         public Customer Customer { get; protected set; }
 
-        public Address(string addressPlace, string numberAddress, string complement, string zipCode, string neighborhood, string city, string state)
+        public Address(string addressPlace, string numberAddress, string complement, string zipCode, string neighborhood, string city, string state, Guid customerId)
         {
             AddressPlace = addressPlace;
             NumberAddress = numberAddress;
@@ -35,6 +35,7 @@ namespace NSE.Client.API.Models
             Neighborhood = neighborhood;
             City = city;
             State = state;
+            CustomerId = customerId;
         }
     }
 }

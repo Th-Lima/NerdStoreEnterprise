@@ -1,6 +1,7 @@
 ﻿using NSE.Core.Communication;
 using NSE.WebApp.MVC.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Services.Cart
@@ -13,5 +14,11 @@ namespace NSE.WebApp.MVC.Services.Cart
         Task<ResponseResult> UpdateCartItem(Guid productId, ItemCartViewModel product);
         Task<ResponseResult> RemoveCartItem(Guid productId);
         Task<ResponseResult> ApplyVoucherCart(string voucher);
+
+        //Order
+        Task<ResponseResult> FinalizeOrder(OrderTransactionViewModel orderTransaction);
+        Task<OrderViewModel> GetLastOrder();
+        Task<IEnumerable<OrderViewModel>> GetListByCustomerId();
+        OrderTransactionViewModel MapForOrder(CartViewModel cart, AddressViewModel address);
     }
 }

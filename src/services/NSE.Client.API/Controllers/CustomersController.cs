@@ -1,27 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSE.Client.API.Application.Commands;
+using NSE.Client.API.Models;
 using NSE.Core.Mediator;
 using NSE.WebAPI.Core.Controllers;
-using System;
+using NSE.WebAPI.Core.User;
 using System.Threading.Tasks;
 
 namespace NSE.Client.API.Controllers
 {
     public class CustomersController : MainController
     {
-        private readonly IMediatorHandler _mediatorHandler;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IMediatorHandler _mediator;
+        private readonly IAspNetUser _user;
 
-        public CustomersController(IMediatorHandler mediatorHandler)
+        public CustomersController(ICustomerRepository clienteRepository, IMediatorHandler mediator, IAspNetUser user)
         {
-            _mediatorHandler = mediatorHandler;
+            _customerRepository = clienteRepository;
+            _mediator = mediator;
+            _user = user;
         }
 
-        [HttpGet("customers")]
-        public async Task<IActionResult> Index()
+        [HttpGet("customer/address")]
+        public async Task<IActionResult> GetAddress()
         {
-            var result = await _mediatorHandler.SendCommand(new RegisterCustomerCommand(Guid.NewGuid(), "Thales", "thales@teste.com", "14048470060"));
+            var address = await _customerRepository.GetAddressById(_user.GetUserId());
 
-            return CustomResponse(result);
+            return address == null ? NotFound() : CustomResponse(address);
+        }
+
+        [HttpPost("customer/address")]
+        public async Task<IActionResult> AddAddress(AddAddressComand address)
+        {
+            address.CustomerId = _user.GetUserId();
+
+            return CustomResponse(await _mediator.SendCommand(address));
         }
     }
 }

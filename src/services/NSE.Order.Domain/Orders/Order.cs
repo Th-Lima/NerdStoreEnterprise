@@ -52,9 +52,9 @@ namespace NSE.Order.Domain.Orders
             Voucher = voucher;
         }
 
-        public void AssignAddress(Address endereco)
+        public void AssignAddress(Address address)
         {
-            Address = endereco;
+            Address = address;
         }
 
         public void CalculateOrderValue()

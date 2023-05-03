@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NSE.Client.API.Models;
 using NSE.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,6 +31,16 @@ namespace NSE.Client.API.Data.Repository
         public async Task<Customer> GetByCPF(string cpf)
         {
             return await _context.Customers.FirstOrDefaultAsync(x => x.Cpf.Number == cpf);
+        }
+
+        public void AddAddress(Address endereco)
+        {
+            _context.Addressess.Add(endereco);
+        }
+
+        public async Task<Address> GetAddressById(Guid id)
+        {
+            return await _context.Addressess.FirstOrDefaultAsync(e => e.CustomerId == id);
         }
 
         public void Dispose()

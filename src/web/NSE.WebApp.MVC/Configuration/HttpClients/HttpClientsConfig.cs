@@ -2,9 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Cart;
 using NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Catalog;
+using NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Customer;
 using NSE.WebApp.MVC.Configuration.HttpClients.RetryPattern.Identity;
 using NSE.WebApp.MVC.Services.Cart;
 using NSE.WebApp.MVC.Services.Catalog;
+using NSE.WebApp.MVC.Services.Customer;
 using NSE.WebApp.MVC.Services.Identity;
 using Polly;
 using System;
@@ -41,9 +43,19 @@ namespace NSE.WebApp.MVC.Configuration.HttpClients
             var retryWaitCartPolicy = RetryPatternPoliciesShoppingBffApi.HandleRetryPatternShoppingBffApi();
             services.AddHttpClient<IShoppingBffService, ShoppingBffService>(config =>
             {
-                var cartUrl = configuration["Settings:ShoppingBffUrl"];
+                var shoppingBffUrl = configuration["Settings:ShoppingBffUrl"];
 
-                config.BaseAddress = new Uri(cartUrl);
+                config.BaseAddress = new Uri(shoppingBffUrl);
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(retryWaitCartPolicy)
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+            var retryWaitCustomerPolicy = RetryPatternPoliciesCustomerApi.HandleRetryPatternCustomerApi();
+            services.AddHttpClient<ICustomerService, CustomerService>(config =>
+            {
+                var customerUrl = configuration["Settings:CustomerUrl"];
+
+                config.BaseAddress = new Uri(customerUrl);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             .AddPolicyHandler(retryWaitCartPolicy)
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));

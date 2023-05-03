@@ -77,7 +77,7 @@ namespace NSE.Order.API.Application.Queries
                 var orderItem = new OrderItemDto
                 {
                     Name = item.PRODUCTNAME,
-                    Value = item.UNITVALUE,
+                    Price = item.UNITVALUE,
                     Amount = item.AMOUNT,
                     Image = item.PRODUCTIMAGE
                 };

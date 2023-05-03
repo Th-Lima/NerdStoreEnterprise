@@ -42,7 +42,7 @@ namespace NSE.Order.API.Application.Dto
                     Image = item.ProductImage,
                     Amount = item.Amount,
                     ProductId = item.ProductId,
-                    Value = item.UnitValue,
+                    Price = item.UnitValue,
                     OrderId = item.OrderId
                 });
             }
