@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using MediatR;
 using NSE.Core.Messages;
+using NSE.Core.Messages.Integration;
+using NSE.MessageBus;
 using NSE.Order.API.Application.Dto;
 using NSE.Order.API.Application.Events;
 using NSE.Order.Domain.Orders;
@@ -16,12 +18,15 @@ namespace NSE.Order.API.Application.Commands
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly IMessageBus _bus;
 
         public OrderCommandHandler(IVoucherRepository voucherRepository,
-                                    IOrderRepository pedidoRepository)
+                                    IOrderRepository pedidoRepository, 
+                                    IMessageBus bus)
         {
             _voucherRepository = voucherRepository;
             _orderRepository = pedidoRepository;
+            _bus = bus;
         }
 
         public async Task<ValidationResult> Handle(AddOrderCommand message, CancellationToken cancellationToken)
@@ -42,7 +47,7 @@ namespace NSE.Order.API.Application.Commands
                 return ValidationResult;
 
             // Processar pagamento
-            if (!ProcessPayment(order)) 
+            if (!await ProcessPayment(order, message)) 
                 return ValidationResult;
 
             // Se pagamento tudo ok!
@@ -127,9 +132,32 @@ namespace NSE.Order.API.Application.Commands
             return true;
         }
 
-        public bool ProcessPayment(Domain.Orders.Order order)
+        public async Task<bool> ProcessPayment(Domain.Orders.Order order, AddOrderCommand message)
         {
-            return true;
+            var orderStarted = new OrderStartedIntegrationEvent
+            {
+                OrderId = order.Id,
+                ClientId = order.ClientId,
+                TotalValue = order.TotalValue,
+                TypePayment = 1, // fixo. Alterar se tiver mais tipos
+                CardName = message.CardName,
+                CardNumber = message.CardNumber,
+                MonthYearDue = message.CardExpiration,
+                CVV = message.CvvCard
+            };
+
+            var result = await _bus
+               .RequestAsync<OrderStartedIntegrationEvent, ResponseMessage>(orderStarted);
+
+            if (result.ValidationResult.IsValid) 
+                return true;
+
+            foreach (var erro in result.ValidationResult.Errors)
+            {
+                AddError(erro.ErrorMessage);
+            }
+
+            return false;
         }
     }
 }
