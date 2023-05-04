@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using NSE.Payment.API.Data;
+using NSE.Payment.API.Data.Repository;
+using NSE.Payment.API.Models;
 using NSE.WebAPI.Core.User;
 
 namespace NSE.Payment.API.Configuration
@@ -14,8 +17,8 @@ namespace NSE.Payment.API.Configuration
             //services.AddScoped<IPagamentoService, PagamentoService>();
             //services.AddScoped<IPagamentoFacade, PagamentoCartaoCreditoFacade>();
 
-            //services.AddScoped<IPagamentoRepository, PagamentoRepository>();
-            //services.AddScoped<PagamentosContext>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<PaymentContext>();
         }
     }
 }
