@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.Catalog.API.Configuration;
+using NSE.MessageBus;
 using NSE.WebAPI.Core.Identity;
 
 namespace NSE.Catalog.API
@@ -36,8 +37,9 @@ namespace NSE.Catalog.API
 
             services.AddSwaggerConfiguration();
 
-            services.RegisterServices();
+            services.AddMessageBusConfiguration(Configuration);
 
+            services.RegisterServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
