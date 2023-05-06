@@ -8,6 +8,8 @@ namespace NSE.Order.API.Application.Dto
         public Guid Id { get; set; }
         public int Code { get; set; }
 
+        public Guid CustomerId { get; set; }
+
         public int Status { get; set; }
         public DateTime Date { get; set; }
         public decimal TotalValue { get; set; }
