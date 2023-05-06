@@ -83,20 +83,20 @@ namespace NSE.Payment.API.Services
             return new ResponseMessage(validationResult);
         }
 
-        public async Task<ResponseMessage> CancelPayment(Guid pedidoId)
+        public async Task<ResponseMessage> CancelPayment(Guid orderId)
         {
-            var transactionsList = await _paymentRepository.GetTransactionsByOrderId(pedidoId);
+            var transactionsList = await _paymentRepository.GetTransactionsByOrderId(orderId);
             var transactionAuthorize = transactionsList?.FirstOrDefault(t => t.Status == StatusTransaction.Authorized);
             var validationResult = new ValidationResult();
 
-            if (transactionAuthorize == null) throw new DomainException($"Transação não encontrada para o pedido {pedidoId}");
+            if (transactionAuthorize == null) throw new DomainException($"Transação não encontrada para o pedido {orderId}");
 
             var transaction = await _paymentFacade.CancelAuthorization(transactionAuthorize);
 
             if (transaction.Status != StatusTransaction.Cancelled)
             {
                 validationResult.Errors.Add(new ValidationFailure("Pagamento",
-                    $"Não foi possível cancelar o pagamento do pedido {pedidoId}"));
+                    $"Não foi possível cancelar o pagamento do pedido {orderId}"));
 
                 return new ResponseMessage(validationResult);
             }
@@ -107,7 +107,7 @@ namespace NSE.Payment.API.Services
             if (!await _paymentRepository.UnitOfWork.Commit())
             {
                 validationResult.Errors.Add(new ValidationFailure("Pagamento",
-                    $"Não foi possível persistir o cancelamento do pagamento do pedido {pedidoId}"));
+                    $"Não foi possível persistir o cancelamento do pagamento do pedido {orderId}"));
 
                 return new ResponseMessage(validationResult);
             }
