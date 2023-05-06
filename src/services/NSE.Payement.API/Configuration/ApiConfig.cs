@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.Payment.API.Data;
+using NSE.Payment.API.Facade;
 using NSE.WebAPI.Core.Identity;
 
 namespace NSE.Payment.API.Configuration
@@ -18,7 +19,7 @@ namespace NSE.Payment.API.Configuration
 
             services.AddControllers();
 
-            //services.Configure<PagamentoConfig>(configuration.GetSection("PagamentoConfig"));
+            services.Configure<PaymentConfig>(configuration.GetSection("PaymentConfig"));
 
             services.AddCors(options =>
             {
