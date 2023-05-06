@@ -50,25 +50,23 @@ namespace NSE.Order.API.Services
 
         private async void ProcessOrders(object state)
         {
-            _logger.LogInformation("Processando pedido");
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var orderQueries = scope.ServiceProvider.GetRequiredService<IOrderQueries>();
+                var order = await orderQueries.GetOrdersAuthorized();
 
-            //using (var scope = _serviceProvider.CreateScope())
-            //{
-            //    var pedidoQueries = scope.ServiceProvider.GetRequiredService<IOrderQueries>();
-            //    var order = await pedidoQueries.GetOrdersAuthorized();
+                if (order == null)
+                    return;
 
-            //    if (order == null) 
-            //        return;
+                var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
 
-            //    var bus = scope.ServiceProvider.GetRequiredService<IMessageBus>();
+                var orderAuthorized = new OrderAuthorizedIntegrationEvent(order.CustomerId, order.Id,
+                    order.OrderItems.ToDictionary(p => p.ProductId, p => p.Amount));
 
-            //    var orderAuthorized = new OrderAuthorizedIntegrationEvent(order.CustomerId, order.Id,
-            //        order.OrderItems.ToDictionary(p => p.ProductId, p => p.Amount));
+                await bus.PublishAsync(orderAuthorized); //Fire, Forget
 
-            //    await bus.PublishAsync(orderAuthorized);
-
-            //    _logger.LogInformation($"Pedido ID: {order.Id} foi encaminhado para baixa no estoque.");
-            //}
+                _logger.LogInformation($"Pedido ID: {order.Id} foi encaminhado para baixa no estoque.");
+            }
         }
     }
 }

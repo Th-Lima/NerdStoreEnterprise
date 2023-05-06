@@ -12,7 +12,7 @@ namespace NSE.Order.API.Application.Queries
     {
         Task<OrderDto> GetLastOrder(Guid clientId);
         Task<IEnumerable<OrderDto>> GetListByClientId(Guid clientId);
-        //Task<OrderDto> GetOrdersAuthorized();
+        Task<OrderDto> GetOrdersAuthorized();
     }
 
     public class OrderQueries : IOrderQueries
@@ -40,7 +40,7 @@ namespace NSE.Order.API.Application.Queries
             var order = await _orderRepository.GetConnect()
                 .QueryAsync<dynamic>(sql, new { clientId });
 
-            return MapearPedido(order);
+            return MappingOrder(order);
         }
 
         public async Task<IEnumerable<OrderDto>> GetListByClientId(Guid clientId)
@@ -50,38 +50,38 @@ namespace NSE.Order.API.Application.Queries
             return order.Select(OrderDto.ForOrderDto);
         }
 
-        //public async Task<OrderDto> GetOrdersAuthorized()
-        //{
-        //    // Correção para pegar todos os itens do pedido e ordernar pelo pedido mais antigo
-        //    const string sql = @"SELECT 
-        //                        P.ID as 'OrderId', P.ID, P.CLIENTID, 
-        //                        PI.ID as 'OrderItemId', PI.ID, PI.PRODUCTID, PI.AMOUNT 
-        //                        FROM ORDERS P 
-        //                        INNER JOIN ORDERITEMS PI ON P.ID = PI.ORDERID 
-        //                        WHERE P.ORDERSTATUS = 1                                
-        //                        ORDER BY P.CREATIONDATE";
+        public async Task<OrderDto> GetOrdersAuthorized()
+        {
+            // Correção para pegar todos os itens do pedido e ordernar pelo pedido mais antigo
+            const string sql = @"SELECT 
+                                P.ID as 'OrderId', P.ID, P.CLIENTID, 
+                                PI.ID as 'OrderItemId', PI.ID, PI.PRODUCTID, PI.AMOUNT 
+                                FROM ORDERS P 
+                                INNER JOIN ORDERITEMS PI ON P.ID = PI.ORDERID 
+                                WHERE P.ORDERSTATUS = 1                                
+                                ORDER BY P.CREATIONDATE";
 
-        //    // Utilizacao do lookup para manter o estado a cada ciclo de registro retornado
-        //    var lookup = new Dictionary<Guid, OrderDto>();
+            // Utilizacao do lookup para manter o estado a cada ciclo de registro retornado
+            var lookup = new Dictionary<Guid, OrderDto>();
 
-        //    await _orderRepository.GetConnect().QueryAsync<OrderDto, OrderItemDto, OrderDto>(sql,
-        //        (p, pi) =>
-        //        {
-        //            if (!lookup.TryGetValue(p.Id, out var orderDto))
-        //                lookup.Add(p.Id, orderDto = p);
+            await _orderRepository.GetConnect().QueryAsync<OrderDto, OrderItemDto, OrderDto>(sql,
+                (p, pi) =>
+                {
+                    if (!lookup.TryGetValue(p.Id, out var orderDto))
+                        lookup.Add(p.Id, orderDto = p);
 
-        //            orderDto.OrderItems ??= new List<OrderItemDto>();
-        //            orderDto.OrderItems.Add(pi);
+                    orderDto.OrderItems ??= new List<OrderItemDto>();
+                    orderDto.OrderItems.Add(pi);
 
-        //            return orderDto;
+                    return orderDto;
 
-        //        }, splitOn: "PedidoId,PedidoItemId");
+                }, splitOn: "OrderId,OrderItemId");
 
-        //    // Obtendo dados o lookup
-        //    return lookup.Values.OrderBy(p => p.Date).FirstOrDefault();
-        //}
+            // Obtendo dados do lookup
+            return lookup.Values.OrderBy(p => p.Date).FirstOrDefault();
+        }
 
-        private OrderDto MapearPedido(dynamic result)
+        private OrderDto MappingOrder(dynamic result)
         {
             var order = new OrderDto
             {
