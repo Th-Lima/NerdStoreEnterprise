@@ -57,7 +57,8 @@ namespace NSE.Payment.API.Services
             var transactionAuthorize = transactionsList?.FirstOrDefault(t => t.Status == StatusTransaction.Authorized);
             var validationResult = new ValidationResult();
 
-            if (transactionAuthorize == null) throw new DomainException($"Transação não encontrada para o pedido {orderId}");
+            if (transactionAuthorize == null) 
+                throw new DomainException($"Transação não encontrada para o pedido {orderId}");
 
             var transaction = await _paymentFacade.CapturePayment(transactionAuthorize);
 

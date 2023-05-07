@@ -8,10 +8,10 @@ namespace NSE.Order.API.Application.Events
         public Guid OrderId { get; private set; }
         public Guid ClientId { get; private set; }
 
-        public OrderRealizedEvent(Guid pedidoId, Guid clienteId)
+        public OrderRealizedEvent(Guid orderId, Guid clientId)
         {
-            OrderId = pedidoId;
-            ClientId = clienteId;
+            OrderId = orderId;
+            ClientId = clientId;
         }
     }
 }

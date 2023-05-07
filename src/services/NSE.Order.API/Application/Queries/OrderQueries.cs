@@ -19,9 +19,9 @@ namespace NSE.Order.API.Application.Queries
     {
         private readonly IOrderRepository _orderRepository;
 
-        public OrderQueries(IOrderRepository pedidoRepository)
+        public OrderQueries(IOrderRepository orderRepository)
         {
-            _orderRepository = pedidoRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<OrderDto> GetLastOrder(Guid clientId)

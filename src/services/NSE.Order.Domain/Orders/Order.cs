@@ -45,6 +45,16 @@ namespace NSE.Order.Domain.Orders
             OrderStatus = OrderStatus.Authorized;
         }
 
+        public void CancelOrder()
+        {
+            OrderStatus = OrderStatus.Canceled;
+        }
+
+        public void FinalizeOrder()
+        {
+            OrderStatus = OrderStatus.Paid;
+        }
+
         public void AssignVoucher(Voucher voucher)
         {
             VoucherUsed = true;

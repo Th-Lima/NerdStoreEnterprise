@@ -21,11 +21,11 @@ namespace NSE.Order.API.Application.Commands
         private readonly IMessageBus _bus;
 
         public OrderCommandHandler(IVoucherRepository voucherRepository,
-                                    IOrderRepository pedidoRepository, 
+                                    IOrderRepository orderRepository, 
                                     IMessageBus bus)
         {
             _voucherRepository = voucherRepository;
-            _orderRepository = pedidoRepository;
+            _orderRepository = orderRepository;
             _bus = bus;
         }
 

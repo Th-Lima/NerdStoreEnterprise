@@ -30,6 +30,9 @@ namespace NSE.Payment.API.Services
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Remote procedure call
+        /// </summary>
         private void SetResponder()
         {
             _bus.RespondAsync<OrderStartedIntegrationEvent, ResponseMessage>(async request =>
@@ -38,11 +41,11 @@ namespace NSE.Payment.API.Services
 
         private void SetSubscribers()
         {
-            _bus.SubscribeAsync<OrderCanceledIntegrationEvent>("PedidoCancelado", async request =>
-            await CancelarPagamento(request));
+            _bus.SubscribeAsync<OrderCanceledIntegrationEvent>("OrderCanceled", async request =>
+            await CancelPayment(request));
 
-            _bus.SubscribeAsync<OrderWithdrawnFromStockIntegrationEvent>("PedidoBaixadoEstoque", async request =>
-            await CapturarPagamento(request));
+            _bus.SubscribeAsync<OrderWithdrawnFromStockIntegrationEvent>("OrderWithdrawnFromStock", async request =>
+            await CapturePayment(request));
         }
 
         private async Task<ResponseMessage> AutorizarPagamento(OrderStartedIntegrationEvent message)
@@ -63,7 +66,7 @@ namespace NSE.Payment.API.Services
             return response;
         }
 
-        private async Task CancelarPagamento(OrderCanceledIntegrationEvent message)
+        private async Task CancelPayment(OrderCanceledIntegrationEvent message)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -76,7 +79,7 @@ namespace NSE.Payment.API.Services
             }
         }
 
-        private async Task CapturarPagamento(OrderWithdrawnFromStockIntegrationEvent message)
+        private async Task CapturePayment(OrderWithdrawnFromStockIntegrationEvent message)
         {
             using (var scope = _serviceProvider.CreateScope())
             {

@@ -44,9 +44,9 @@ namespace NSE.Order.API.Controllers
         [HttpGet("order/list-client")]
         public async Task<IActionResult> ListByClient()
         {
-            var pedidos = await _orderQueries.GetListByClientId(_user.GetUserId());
+            var orders = await _orderQueries.GetListByClientId(_user.GetUserId());
 
-            return pedidos == null ? NotFound() : CustomResponse(pedidos);
+            return orders == null ? NotFound() : CustomResponse(orders);
         }
     }
 }

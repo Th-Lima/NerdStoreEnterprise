@@ -26,9 +26,9 @@ namespace NSE.WebApp.MVC.Controllers
             if (cart.Itens.Count == 0) return RedirectToAction("Index", "Cart");
 
             var address = await _customerService.GetAddress();
-            var pedido = _shoppingBffService.MapForOrder(cart, address);
+            var order = _shoppingBffService.MapForOrder(cart, address);
 
-            return View(pedido);
+            return View(order);
         }
 
         [HttpGet]

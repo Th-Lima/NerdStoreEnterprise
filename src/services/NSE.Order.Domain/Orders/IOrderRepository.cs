@@ -10,14 +10,14 @@ namespace NSE.Order.Domain.Orders
     {
         Task<Order> GetById(Guid id);
         Task<IEnumerable<Order>> GetListByClientId(Guid clienteId);
-        void Add(Order pedido);
-        void Update(Order pedido);
+        void Add(Order order);
+        void Update(Order order);
 
         DbConnection GetConnect();
 
 
         /* Pedido Item */
         Task<OrderItem> GetItemById(Guid id);
-        Task<OrderItem> GetItemByOrder(Guid pedidoId, Guid produtoId);
+        Task<OrderItem> GetItemByOrder(Guid orderId, Guid productId);
     }
 }
