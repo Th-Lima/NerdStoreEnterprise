@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NSE.Catalog.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CatalogController : MainController
     {
         private readonly IProductRepository _productRepository;
@@ -19,14 +19,14 @@ namespace NSE.Catalog.API.Controllers
             _productRepository = productRepository;
         }
 
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpGet("catalog/products")]
-        public async Task<IEnumerable<Product>> Index()
+        public async Task<PagedResult<Product>> Index([FromQuery] int pageSize = 8, [FromQuery] int page = 1, [FromQuery] string query = null)
         {
-            return await _productRepository.GetAll();
+            return await _productRepository.GetAll(pageSize, page, query);
         }
 
-        [ClaimsAuthorize("Catalog", "Read")]
+        //[ClaimsAuthorize("Catalog", "Read")]
         [HttpGet("catalog/products/{id}")]
         public async Task<Product> ProductDetails(Guid id)
         {

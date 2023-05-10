@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dapper;
+using Microsoft.EntityFrameworkCore;
 using NSE.Catalog.API.Models;
 using NSE.Core.Data;
 using System;
@@ -18,9 +19,37 @@ namespace NSE.Catalog.API.Data.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<PagedResult<Product>> GetAll(int pageSize, int pageIndex, string query = null)
         {
-            return await _context.Product.AsNoTracking().ToListAsync();
+            var sql = @$"SELECT * FROM Products 
+                      WHERE (@Query IS NULL OR Name LIKE '%' + @Query + '%') 
+                      ORDER BY [Name] 
+                      OFFSET {pageSize * (pageIndex - 1)} ROWS 
+                      FETCH NEXT {pageSize} ROWS ONLY 
+                      SELECT COUNT(Id) FROM Products 
+                      WHERE (@Query IS NULL OR Name LIKE '%' + @Query + '%')";
+
+            var multi = await _context.Database.GetDbConnection()
+                .QueryMultipleAsync(sql, new { Query = query });
+
+            var products = multi.Read<Product>();
+            var total = multi.Read<int>().FirstOrDefault();
+
+            return new PagedResult<Product>()
+            {
+                List = products,
+                TotalResults = total,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Query = query
+            };
+
+            //Conceito Paginação - Entity Framework + LINQ 
+            //return await _context.Product.AsNoTracking()
+            //    .Skip(pageSize * (pageIndex - 1))
+            //    .Take(pageSize)
+            //    .Where(x => x.Name.Contains(query))
+            //    .ToListAsync();
         }
 
         public async Task<Product> GetById(Guid id)
