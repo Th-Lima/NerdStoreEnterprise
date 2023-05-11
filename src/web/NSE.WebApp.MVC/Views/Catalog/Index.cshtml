@@ -1,5 +1,5 @@
 ﻿@using NSE.WebApp.MVC.Extensions
-@model IEnumerable<NSE.WebApp.MVC.Models.ProductViewModel>
+@model PagedViewModel<ProductViewModel>
 
 @{
     ViewData["Title"] = "Todos os produtos";
@@ -15,7 +15,7 @@
         <div class="container" style=" padding-top: 20px">
             <div class="row">
                 @{
-                    foreach (var product in Model.OrderBy(p => p.Name))
+                    foreach (var product in Model.List.Where(p => p.Active).OrderBy(p => p.Name))
                     {
                         <div class="col-md-3">
                             <div href="#" class="card card-product-grid">
@@ -40,6 +40,9 @@
                     }
                 }
             </div>
+
+            <vc:pagination model-paginated="@Model"></vc:pagination>
+
         </div>
     </div>
 </section>
