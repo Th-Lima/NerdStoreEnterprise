@@ -15,15 +15,15 @@ namespace NSE.Identity.API.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IJwtService _jwtService;
+        private readonly INseAuthenticationService _authenticationService;
        
         private readonly IMessageBus _bus;
 
-        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IJwtService jwtService, IMessageBus bus)
+        public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, INseAuthenticationService authenticationService, IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _jwtService = jwtService;
+            _authenticationService = authenticationService;
             _bus = bus;
         }
 
@@ -52,7 +52,7 @@ namespace NSE.Identity.API.Controllers
                     return CustomResponse(customerResult.ValidationResult);
                 }
                                 
-                return CustomResponse(await _jwtService.GenerateJwtAsync(userRegister.Email));
+                return CustomResponse(await _authenticationService.GenerateJwtAsync(userRegister.Email));
             }
 
             foreach (var resultError in result.Errors)
@@ -72,7 +72,7 @@ namespace NSE.Identity.API.Controllers
             var result = await _signInManager.PasswordSignInAsync(userLogin.Email, userLogin.Password, isPersistent: false, lockoutOnFailure: true);
 
             if (result.Succeeded)
-                return CustomResponse(await _jwtService.GenerateJwtAsync(userLogin.Email));
+                return CustomResponse(await _authenticationService.GenerateJwtAsync(userLogin.Email));
 
             if (result.IsLockedOut)
             {
@@ -84,6 +84,26 @@ namespace NSE.Identity.API.Controllers
             AddErrorsProcessing("Usuário ou Senha incorretos");
 
             return CustomResponse();
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult> RefreshToken([FromBody] string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                AddErrorsProcessing("Refresh Token inválido");
+                return CustomResponse();
+            }
+
+            var token = await _authenticationService.GetRefreshToken(Guid.Parse(refreshToken));
+
+            if (token is null)
+            {
+                AddErrorsProcessing("Refresh Token expirado");
+                return CustomResponse();
+            }
+
+            return CustomResponse(await _authenticationService.GenerateJwtAsync(token.Username));
         }
 
         private async Task<ResponseMessage> RegisterCustomer(UserIdentityRegister userRegister)

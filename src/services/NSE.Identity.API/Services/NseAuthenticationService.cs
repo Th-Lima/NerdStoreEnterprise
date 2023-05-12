@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NSE.Identity.API.Data;
+using NSE.Identity.API.Extensions;
 using NSE.Identity.API.Models;
 using NSE.Identity.API.Services.Interfaces;
 using NSE.WebAPI.Core.Identity;
@@ -15,15 +18,22 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace NSE.Identity.API.Services
 {
-    public class JwtService : IJwtService
+    public class NseAuthenticationService : INseAuthenticationService
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
+        private readonly ApplicationDbContext _context;
+        private readonly AppTokenSettings _appTokenSettings;
 
-        public JwtService(UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings)
+        public NseAuthenticationService(UserManager<IdentityUser> userManager, 
+                                        IOptions<AppSettings> appSettings, 
+                                        ApplicationDbContext applicationDbContext,
+                                        IOptions<AppTokenSettings> appTokenSettings)
         {
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _context = applicationDbContext;
+            _appTokenSettings = appTokenSettings.Value;
         }
 
         public async Task<UserIdentityResponseLogin> GenerateJwtAsync(string email)
@@ -33,12 +43,23 @@ namespace NSE.Identity.API.Services
 
             var identityClaims = new ClaimsIdentity();
             identityClaims.AddClaims(claims);
-
             var encodedToken = GenerateToken(identityClaims);
 
-            var response = BuildUserResponseLogin(encodedToken, user, claims);
+            var refreshToken = await GenerateRefreshToken(user.Email);
+
+            var response = BuildUserResponseLogin(encodedToken, user, claims, refreshToken);
 
             return response;
+        }
+
+        public async Task<RefreshToken> GetRefreshToken(Guid refreshToken)
+        {
+            var token = await _context.RefreshTokens.AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Token == refreshToken);
+
+            return token != null && token.ExpirationDate.ToLocalTime() > DateTime.Now
+                ? token
+                : null;
         }
 
         private async Task<IList<Claim>> GetClaimsAsync(IdentityUser user)
@@ -79,11 +100,12 @@ namespace NSE.Identity.API.Services
             return encodedToken;
         }
 
-        private UserIdentityResponseLogin BuildUserResponseLogin(string encodedToken, IdentityUser user, IList<Claim> claims)
+        private UserIdentityResponseLogin BuildUserResponseLogin(string encodedToken, IdentityUser user, IList<Claim> claims, RefreshToken refreshToken)
         {
             var response = new UserIdentityResponseLogin()
             {
                 AccessToken = encodedToken,
+                RefreshToken = refreshToken.Token,
                 ExpiresIn = TimeSpan.FromHours(_appSettings.ExpirationHours).TotalSeconds,
                 UserToken = new UserIdentityToken
                 {
@@ -98,5 +120,21 @@ namespace NSE.Identity.API.Services
 
         private static long ToUnixEpochDate(DateTime date) =>
             (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        private async Task<RefreshToken> GenerateRefreshToken(string email)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Username = email,
+                ExpirationDate = DateTime.UtcNow.AddHours(_appTokenSettings.RefreshTokenExpiration)
+            };
+
+            _context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(u => u.Username == email));
+            await _context.RefreshTokens.AddAsync(refreshToken);
+
+            await _context.SaveChangesAsync();
+
+            return refreshToken;
+        }
     }
 }

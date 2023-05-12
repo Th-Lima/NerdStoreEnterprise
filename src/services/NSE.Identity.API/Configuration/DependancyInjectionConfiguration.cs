@@ -8,7 +8,7 @@ namespace NSE.Identity.API.Configuration
     {
         public static IServiceCollection AddDependancyInjectionConfiguration(this IServiceCollection services)
         {
-            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<INseAuthenticationService, NseAuthenticationService>();
 
             return services;
         }
