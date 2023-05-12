@@ -7,5 +7,10 @@ namespace NSE.WebApp.MVC.Services.Identity
     {
         Task<UserResponseLogin> LoginAsync(UserLogin userLogin);
         Task<UserResponseLogin> RegisterAsync(UserRegister userRegister);
+        Task PerformLogin(UserResponseLogin response);
+        Task Logout();
+        Task<UserResponseLogin> UseRefreshToken(string refreshToken);
+        bool TokenExpired();
+        Task<bool> RefreshTokenValid();
     }
 }

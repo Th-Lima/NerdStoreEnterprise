@@ -14,6 +14,7 @@ namespace NSE.WebAPI.Core.User
         string GetUserEmail();
 
         string GetUserToken();
+        string GetUserRefreshToken();
 
         bool IsAuthenticated();
 

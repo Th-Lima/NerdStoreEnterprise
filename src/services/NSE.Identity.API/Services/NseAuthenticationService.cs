@@ -91,7 +91,8 @@ namespace NSE.Identity.API.Services
                 Issuer = _appSettings.Issuer,
                 Audience = _appSettings.ValidatedAt,
                 Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
+                //Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
+                Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
