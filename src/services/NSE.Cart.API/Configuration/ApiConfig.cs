@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.Cart.API.Data;
+using NSE.Cart.API.Services.gRPC;
 using NSE.WebAPI.Core.Identity;
 
 namespace NSE.Cart.API.Configuration
@@ -17,6 +18,8 @@ namespace NSE.Cart.API.Configuration
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+
+            services.AddGrpc();
 
             services.AddCors(options =>
             {
@@ -47,6 +50,7 @@ namespace NSE.Cart.API.Configuration
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<CartGrpcService>().RequireCors("Total");
             });
         }
     }
