@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NSE.Bff.Shopping.Models;
 using NSE.Bff.Shopping.Services;
+using NSE.Bff.Shopping.Services.gRPC;
 using NSE.WebAPI.Core.Controllers;
 using System;
 using System.Linq;
@@ -13,14 +14,17 @@ namespace NSE.Bff.Shopping.Controllers
     public class CartController : MainController
     {
         private readonly ICartService _cartService;
+        private readonly ICartGrpcService _cartGrpcService;
         private readonly ICatalogService _catalogService;
         private readonly IOrderService _orderService;
 
         public CartController(ICartService cartService,
-            ICatalogService catalogService, 
-            IOrderService orderService)
+            ICatalogService catalogService,
+            IOrderService orderService,
+            ICartGrpcService cartGrpcService)
         {
             _cartService = cartService;
+            _cartGrpcService = cartGrpcService;
             _catalogService = catalogService;
             _orderService = orderService;
         }
@@ -29,14 +33,14 @@ namespace NSE.Bff.Shopping.Controllers
         [Route("shopping/cart")]
         public async Task<IActionResult> Index()
         {
-            return CustomResponse(await _cartService.GetCart());
+            return CustomResponse(await _cartGrpcService.GetCart());
         }
 
         [HttpGet]
         [Route("shopping/cart-amount")]
         public async Task<int> GetAmountCart()
         {
-            var amount = await _cartService.GetCart();
+            var amount = await _cartGrpcService.GetCart();
 
             return amount?.Itens.Sum(x => x.Amount) ?? 0;
         }
