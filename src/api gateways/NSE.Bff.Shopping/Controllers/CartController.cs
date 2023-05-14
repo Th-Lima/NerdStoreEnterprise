@@ -33,6 +33,9 @@ namespace NSE.Bff.Shopping.Controllers
         [Route("shopping/cart")]
         public async Task<IActionResult> Index()
         {
+            //return CustomResponse(await _cartService.GetCart());
+
+            //gRPC
             return CustomResponse(await _cartGrpcService.GetCart());
         }
 
@@ -40,6 +43,9 @@ namespace NSE.Bff.Shopping.Controllers
         [Route("shopping/cart-amount")]
         public async Task<int> GetAmountCart()
         {
+            //var amount = await _cartService.GetCart();
+
+            //gRPC
             var amount = await _cartGrpcService.GetCart();
 
             return amount?.Itens.Sum(x => x.Amount) ?? 0;
