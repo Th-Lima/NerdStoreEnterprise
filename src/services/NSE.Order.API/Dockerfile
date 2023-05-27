@@ -1,20 +1,24 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/services/NSE.Order.API/NSE.Order.API.csproj", "src/services/NSE.Order.API/"]
-RUN dotnet restore "src/services/NSE.Order.API/NSE.Order.API.csproj"
+COPY ["./services/NSE.Order.API/NSE.Order.API.csproj", "services/NSE.Order.API/"]
+COPY ["./building blocks/NSE.Core/NSE.Core.csproj", "building blocks/NSE.WebAPI.Core/"]
+COPY ["./building blocks/NSE.WebAPI.Core/NSE.WebAPI.Core.csproj", "building blocks/NSE.WebAPI.Core/"]
+COPY ["./building blocks/NSE.MessageBus/NSE.MessageBus.csproj", "building blocks/NSE.MessageBus/"]
+
+RUN dotnet restore "services/NSE.Order.API/NSE.Order.API.csproj"
 COPY . .
-WORKDIR "/src/src/services/NSE.Order.API"
+WORKDIR "services/NSE.Order.API"
 RUN dotnet build "NSE.Order.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NSE.Order.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "NSE.Order.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
