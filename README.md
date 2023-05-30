@@ -6,7 +6,7 @@ Repositório do projeto realizado no curso "ASP.NET Core Enterprise Applications
 O projeto implementado é um e-commerce baseado em serviços de Api's distribuidos.
 > *"Usar aplicações em microservices são para poucos cenários, onde são necessários extremamente de atualizações e escalabilidade (a cada pouco tempo tem que subir novidades tendo milhares/milhões de usuários), como por exemplo em aplicações como: Netflix, Uber, Amazon e afins. Agora em cenários de aplicações corporativas em qualquer tipo de setor comercial/industrial pode ser muito bem entregue no modelo com arquitetura distribuída. E caso evolua muito a aplicação este modelo está a poucos passos de se tornar um microserviço."*
 
-- Totalmente construído com .NET e C#, com aplicações de WEB API e ASP.NET CORE MVC
+##### Totalmente construído com .NET e C#, com aplicações de WEB API e ASP.NET CORE MVC
 
 ### Abaixo segue arquitetura do projeto
 
