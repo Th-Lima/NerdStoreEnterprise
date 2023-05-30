@@ -1,4 +1,4 @@
-# Desenvoldedor.op - Nerd Store Enterprise
+# Desenvoldedor.io - Nerd Store Enterprise
 Repositório do projeto realizado no curso "ASP.NET Core Enterprise Applications" da plataforma https://www.desenvolvedor.io
 
 ![7d3cf02a6938d4fdcf5cbdcba070ca8f77cdc6ccd7e21e15b79601d53c53ce34](https://github.com/Th-Lima/NerdStoreEnterprise/assets/36715075/f49f2f73-5637-44d2-a66d-9957688e8447)
